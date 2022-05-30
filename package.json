@@ -4,14 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "dev2": "set MODE=dev&& nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/storage": "^5.20.5",
+    "@prisma/client": "^3.14.0",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "prisma": "^3.14.0"
+    "multer": "^1.4.4",
+    "prisma": "^3.14.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }

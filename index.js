@@ -1,6 +1,17 @@
 const express = require('express')
+const {port} = require('./config/env')
+// routes
+const files = require('./routes/files')
+const user = require('./routes/users')
 
 const app = express()
+
+// middelwares
+app.use(express.json())
+
+// use Routes
+files(app)
+user(app)
 
 app.get('/',(req,res)=>{
     return res.json({
@@ -8,6 +19,6 @@ app.get('/',(req,res)=>{
     })
 })
 
-app.listen(4000,()=>{
-    console.log('Liste on Port : ' + 4000)
+app.listen(port,()=>{
+    console.log('Liste on Port : http://localhost:' + port)
 })

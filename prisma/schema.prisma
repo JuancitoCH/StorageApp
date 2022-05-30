@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -19,6 +19,7 @@ model User{
   createdAt DateTime @default(now())
   folders Folder[]
   files File[]
+  subscription Subscription?
 }
 
 model Folder{
@@ -37,7 +38,8 @@ model Folder{
 
 model File{
   id Int @id @default(autoincrement())
-  name String
+  name String //Google cloud name
+  originalName String //Original Name
   createdAt DateTime @default(now())
   owner User @relation(fields: [ownerId],references: [id])
   ownerId Int
@@ -46,8 +48,16 @@ model File{
   folderId Int?
 }
 
-// model Suscription{
-//   id Int @id @default(autoincrement())
-//   name String
-//   createdAt DateTime @default(now())
-// }
+model Subscription{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  type SubscriptionType @default(FREE)
+  user User @relation(fields: [userId],references: [id])
+  userId Int
+}
+
+enum SubscriptionType{
+  FREE
+  PREMIUM
+  ENTERPRISE
+}
