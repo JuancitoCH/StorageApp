@@ -45,6 +45,25 @@ const uploadFile = (file) => {
     })
 }
 
+const deleteFile= async (fileName) => {
+    const file = storage.bucket(bucket_name).file(fileName)
+    try{
+        await file.delete() //http response
+    
+    return {
+        success:true,
+        fileName
+    }
+    }
+    catch(error){
+        console.log(error)
+        return {
+            success:false,
+            message:'an Error Ocurred'
+        }
+    }
+}
+
 const uploadFiles = async (files) => {
     const results = await Promise.allSettled(files.map(file=>{
         return uploadFile(file)
@@ -53,4 +72,4 @@ const uploadFiles = async (files) => {
     return results
 }
 
-module.exports = {uploadFiles,uploadFile}
+module.exports = {uploadFiles,uploadFile,deleteFile}

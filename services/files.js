@@ -1,11 +1,15 @@
-const {uploadFiles} = require('../libs/storage')
+const {uploadFiles,deleteFile} = require('../libs/storage')
 const client = require("../libs/dbClient")
 
 
 class File{
+
+    async getAll(){
+        return await client.file.findMany()
+    }
+
     async uploadMany(files,idUser){
         const results = await uploadFiles(files)
-        
         const uploadedFiles = results.map(async file=>{
             if(file.value.success){
                 const results = await client.file.create({
@@ -23,15 +27,49 @@ class File{
                     success:true,
                     file:results
                 }
-            }else{
+            }
+            else{
                 return{
                     success:false,
                     message:'An Error ocurred'
                 }
             }
         })
-        return await (await Promise.allSettled(uploadedFiles)).map(result=>result.value)
-        
+        return await (await Promise.allSettled(uploadedFiles)).map(result=>result.value)    
+    }
+    async deleteMany(files){
+        const resultPromises = files.map(async file=>{
+            const result = await deleteFile(file)
+            if(result.success){
+                try{
+                    const deletedFile = await client.file.delete({
+                        where:{
+                            name:result.fileName
+                        }
+                    })
+                    return {
+                        success:true,
+                        file:deletedFile
+                    }
+                }
+                catch(error){
+                    console.log(error)
+                    return {
+                        success:false,
+                        message:'File Deleted, but BD Error.'
+                    }
+                }
+            }
+            else{
+                return result
+            }
+        })
+
+        return (await Promise.allSettled(resultPromises)).map(result=>{
+            return result.value
+        })
+        // return await (await Promise.allSettled(resultPromises)).map(result=>result.value)    
+
     }
 }
 

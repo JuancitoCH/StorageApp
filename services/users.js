@@ -1,6 +1,16 @@
 const client = require("../libs/dbClient")
 
 class user{
+
+    async getOne(data){
+        const user = await client.user.findUnique({ 
+            where:{
+                email: data.email
+            }
+        })
+        return user
+    }
+
     async getAll(){
         const users = await client.user.findMany()
         
