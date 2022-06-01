@@ -1,6 +1,7 @@
 const client = require("../libs/dbClient")
 const UserClass = require('./users')
-
+const jwt = require('jsonwebtoken')
+const {jwt_secret}= require('../config/env')
 class Auth{
     constructor(){
         this.UserService = new UserClass()
@@ -13,10 +14,14 @@ class Auth{
         if(!this.emailRegex.test(data.email)) return { success:false,message:'email malformed' }
 
         const user = await this.UserService.getOne(data)
+        if(!user) return { success:false,message:'User Not Register' }
         if(user.password !== data.password) return { success:false,message:'invalid email or password' }
+        const token = this.generateToken(user)
+        delete user.password
         return {
             success:true,
-            data:user
+            data:user,
+            token
         }
     }
     async register(data){
@@ -25,10 +30,20 @@ class Auth{
         if(!this.passwordRegex.test(data.password))return { success:false,message:'password malformed, it musnt have spaces and least 8 characters' }
 
         const user = await this.UserService.create(data)
+        const token = this.generateToken(user)
+        delete user.password
         return {
             success:true,
-            data:user
+            data:user,
+            token
         }
+    }
+    generateToken(data){
+        return jwt.sign(
+            { data },
+            jwt_secret,
+            { expiresIn:'5d' }
+        )
     }
 }
 

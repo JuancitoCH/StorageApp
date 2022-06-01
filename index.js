@@ -1,5 +1,7 @@
 const express = require('express')
 const {port} = require('./config/env')
+const cors = require('cors')
+const cookieParser = require('cookie-parser')
 // routes
 const files = require('./routes/files')
 const user = require('./routes/users')
@@ -8,7 +10,11 @@ const auth = require('./routes/auth')
 const app = express()
 
 // middelwares
+app.use(cors({
+    origin:['4000']
+}))
 app.use(express.json())
+app.use(cookieParser())
 
 // use Routes
 files(app)

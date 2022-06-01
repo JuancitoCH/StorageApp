@@ -14,6 +14,12 @@ function files(app){
         return res.json(files)
     })
 
+    router.get("/:fileName",async(req,res)=>{
+        const result = await fileServ.get(req.params.fileName,res)
+        if(result.success) return res.end()
+        if(!result.success)return res.status(404).json(result)
+    })
+
     router.post('/upload',upload.array('files'),async(req,res)=>{
         // console.log(req.files)
         const response = await fileServ.uploadMany(req.files,req.body.id)

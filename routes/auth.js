@@ -1,21 +1,27 @@
 const express = require('express')
 const Auth = require('../services/auth')
+const cookieResponse = require('../libs/cookie')
 
-const auth = (app)=>{
+
+const auth = (app) => {
     const router = express.Router()
     const authService = new Auth()
 
-    app.use('/api/auth',router)
+    app.use('/api/auth', router)
 
-    router.post('/login',async(req,res)=>{
+    router.post('/login', async (req, res) => {
         const response = await authService.login(req.body)
-
+        return cookieResponse(res, response)
+    })
+    router.post('/register', async (req, res) => {
+        const response = await authService.register(req.body)
         return res.json(response)
     })
-    router.post('/register',async(req,res)=>{
-        const response = await authService.register(req.body)
-
-        return res.json(response)
+    router.get('/',(req,res)=>{
+        console.log(req.cookies)
+        return res.json({
+            res: req.cookies.token
+        })
     })
 }
 

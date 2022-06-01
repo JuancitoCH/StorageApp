@@ -1,4 +1,4 @@
-const {uploadFiles,deleteFile} = require('../libs/storage')
+const {uploadFiles,deleteFile, downloadFile} = require('../libs/storage')
 const client = require("../libs/dbClient")
 
 
@@ -6,6 +6,17 @@ class File{
 
     async getAll(){
         return await client.file.findMany()
+    }
+
+    async get(fileName,res){
+        const file = await client.file.findUnique({
+            where:{
+                name:fileName
+            }
+        })
+        if(!file) return {success:false,message:'File Not Found'}
+        
+        return await downloadFile(fileName,res)
     }
 
     async uploadMany(files,idUser){
@@ -37,39 +48,39 @@ class File{
         })
         return await (await Promise.allSettled(uploadedFiles)).map(result=>result.value)    
     }
+
+
     async deleteMany(files){
-        const resultPromises = files.map(async file=>{
-            const result = await deleteFile(file)
-            if(result.success){
-                try{
-                    const deletedFile = await client.file.delete({
-                        where:{
-                            name:result.fileName
-                        }
-                    })
-                    return {
-                        success:true,
-                        file:deletedFile
+        const resultPromises = files.map(this.deleteOne)
+        return (await Promise.allSettled(resultPromises)).map(result=>result.value)
+    }
+
+
+    async deleteOne(file){
+        const result = await deleteFile(file)
+        if(result.success){
+            try{
+                const deletedFile = await client.file.delete({
+                    where:{
+                        name:result.fileName
                     }
-                }
-                catch(error){
-                    console.log(error)
-                    return {
-                        success:false,
-                        message:'File Deleted, but BD Error.'
-                    }
+                })
+                return {
+                    success:true,
+                    file:deletedFile
                 }
             }
-            else{
-                return result
+            catch(error){
+                console.log(error)
+                return {
+                    success:false,
+                    message:'File Deleted, but BD Error.'
+                }
             }
-        })
-
-        return (await Promise.allSettled(resultPromises)).map(result=>{
-            return result.value
-        })
-        // return await (await Promise.allSettled(resultPromises)).map(result=>result.value)    
-
+        }
+        else{
+            return result
+        }
     }
 }
 
