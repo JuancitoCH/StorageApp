@@ -1,6 +1,7 @@
 const express = require('express')
 const Auth = require('../services/auth')
 const cookieResponse = require('../libs/cookie')
+const { isUser } = require('../middleware/auth')
 
 
 const auth = (app) => {
@@ -17,11 +18,8 @@ const auth = (app) => {
         const response = await authService.register(req.body)
         return res.json(response)
     })
-    router.get('/',(req,res)=>{
-        console.log(req.cookies)
-        return res.json({
-            res: req.cookies.token
-        })
+    router.get('/',isUser,(req,res)=>{
+        return res.json({ ...req.userData })
     })
 }
 

@@ -4,6 +4,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 // routes
 const files = require('./routes/files')
+const folders = require('./routes/folders')
 const user = require('./routes/users')
 const auth = require('./routes/auth')
 
@@ -17,6 +18,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 // use Routes
+folders(app)
 files(app)
 user(app)
 auth(app)
