@@ -29,7 +29,10 @@ class Auth{
         if(!this.emailRegex.test(data.email)) return { success:false,message:'email malformed' }
         if(!this.passwordRegex.test(data.password))return { success:false,message:'password malformed, it musnt have spaces and least 8 characters' }
 
-        const user = await this.UserService.create(data)
+        const {user,success} = await this.UserService.create(data)
+
+        if(!success) return { success:false, error:'an error ocurred' }
+
         const token = this.generateToken(user)
         delete user.password
         return {

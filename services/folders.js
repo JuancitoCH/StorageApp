@@ -8,7 +8,16 @@ class Folders {
                 where: {
                     ownerId,
                     parentFolderId: null
-                }
+                },
+                // include:{
+                //     owner:{
+                //         select:{
+                //             id:true,
+                //             name:true,
+                //             email:true
+                //         }
+                //     }
+                // }
             })
             const files = await client.file.findMany({
                 where: {
@@ -20,6 +29,32 @@ class Folders {
                 success:true,
                 folders,
                 files
+            }
+        }
+        catch (err) {
+            console.log(err)
+            return{
+                success:false
+            }
+        }
+    }
+
+    async getById({id,userId:ownerId}){
+        try {
+            const folders = await client.folder.findFirst({
+                where: {
+                    ownerId,
+                    id: Number.parseInt(id)
+                },
+                include:{
+                    files:true,
+                    childFolders:true
+                }
+            })
+            return{
+                success:true,
+                folders:folders.childFolders,
+                files:folders.files
             }
         }
         catch (err) {

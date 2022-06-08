@@ -7,6 +7,8 @@ const files = require('./routes/files')
 const folders = require('./routes/folders')
 const user = require('./routes/users')
 const auth = require('./routes/auth')
+const subscriptions = require('./routes/subscriptions')
+
 
 const app = express()
 
@@ -22,6 +24,7 @@ folders(app)
 files(app)
 user(app)
 auth(app)
+subscriptions(app)
 
 app.get('/',(req,res)=>{
     return res.json({

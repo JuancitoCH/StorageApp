@@ -26,10 +26,10 @@ model Folder{
   id Int @id @default(autoincrement())
   name String
   createdAt DateTime @default(now())
-  owner User @relation(fields: [ownerId],references: [id])
+  owner User @relation(fields: [ownerId],references: [id],onDelete: Cascade)
   ownerId Int
   // relacionarse a si mismo
-  parentFolder Folder? @relation("FolderSubFolder",fields: [parentFolderId],references: [id])
+  parentFolder Folder? @relation("FolderSubFolder",fields: [parentFolderId],references: [id],onDelete: Cascade)
   parentFolderId Int?
   childFolders Folder[] @relation("FolderSubFolder")
   files File[]
@@ -41,10 +41,10 @@ model File{
   name String @unique//Google cloud name
   originalName String //Original Name
   createdAt DateTime @default(now())
-  owner User @relation(fields: [ownerId],references: [id])
+  owner User @relation(fields: [ownerId],references: [id],onDelete: Cascade)
   ownerId Int
 
-  folder Folder? @relation(fields:[folderId],references: [id])
+  folder Folder? @relation(fields:[folderId],references: [id],onDelete: Cascade)
   folderId Int?
 }
 
@@ -52,7 +52,8 @@ model Subscription{
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   type SubscriptionType @default(FREE)
-  user User @relation(fields: [userId],references: [id])
+  stripeCustomerId String @unique
+  user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   userId Int
 }
 

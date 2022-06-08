@@ -1,5 +1,6 @@
 const express = require('express')
 const FoldersService = require('../services/folders')
+const {isUser} = require('../middleware/auth')
 
 const Folder = (app) =>{
     const router = express.Router()
@@ -8,16 +9,27 @@ const Folder = (app) =>{
     app.use('/api/folders',router)
 
 
-    router.get('/myfolders', async (req,res)=>{
+    router.get('/myfolders',isUser, async (req,res)=>{
         const result = await folderServ.getMyFolders({
-            ...req.body
+            userId:req.userData.data.id
+        })
+        return res.status(result.success?200:400).json(result)
+    })
+    router.get('/myfolders/:id',isUser, async (req,res)=>{
+        const {id} = req.params
+        const result = await folderServ.getById({
+            userId:req.userData.data.id,
+            id
         })
         return res.status(result.success?200:400).json(result)
     })
 
-    router.post('/', async (req,res)=>{
+    router.post('/',isUser, async (req,res)=>{
+        const {name,parentFolderId}= req.body
         const result = await folderServ.create({
-            ...req.body
+            userId:req.userData.data.id,
+            name,
+            parentFolderId
         })
         return res.status(result.success?200:400).json(result)
     })

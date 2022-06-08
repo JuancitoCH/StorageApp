@@ -1,4 +1,5 @@
 const express = require('express')
+const { isAmdmin } = require('../middleware/auth')
 const User = require('../services/users')
 
 
@@ -8,12 +9,16 @@ function user(app){
 
     app.use('/api/users',router)
 
-    router.get('/',async (req,res)=>{
+    router.get('/',isAmdmin,async (req,res)=>{
         const user = await userService.getAll()
         return res.json(user)
     })
-    router.post('/',async (req,res)=>{
+    router.post('/',isAmdmin,async (req,res)=>{
         const user = await userService.create(req.body)
+        return res.json(user)
+    })
+    router.delete('/:id',isAmdmin,async (req,res)=>{
+        const user = await userService.delete(req.params.id)
         return res.json(user)
     })
 
