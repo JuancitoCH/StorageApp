@@ -25,6 +25,24 @@ function files(app){
         const response = await fileServ.uploadMany(req.files,req.userData,req.body)
         return res.json(response)
     })
+
+    router.patch('/move/:id',isUser,async(req,res)=>{
+        const response = await fileServ.changeFolderFile({
+            userId:req.userData.id,
+            folderId:req.body.folderId,
+            id:req.params.id
+        })
+        return res.json(response)
+    })
+    router.patch('/rename/:id',isUser,async(req,res)=>{
+        const response = await fileServ.rename({
+            userId:req.userData.id,
+            id:req.params.id,
+            name:req.body.name
+        })
+        return res.json(response)
+    })
+
     router.delete('/delete',isUser,async(req,res)=>{
         const {files} = req.body
         const response = await fileServ.deleteMany(files,req.userData)

@@ -30,7 +30,8 @@ const uploadFile = (file,idUser) => {
                     success: true,
                     message: 'File Uploaded Succesfully',
                     originalName: file.originalname,
-                    fileName
+                    fileName,
+                    size:file.size
                 })
             })
             .on('error', (error) => {
@@ -63,7 +64,7 @@ const downloadFile = async (fileName,res) => {
         stream.on('end',()=>{
             resolve({
                 success:true,
-                message:'downoalded successfully'
+                message:'downloaded successfully'
             })
         })
     })
@@ -88,6 +89,22 @@ const deleteFile = async (fileName,idUser) => {
     }
 }
 
+const deleteFolderUser = async (idUser) =>{
+    try{
+        const file = await storage.bucket(bucket_name).deleteFiles({prefix:idUser+'/'})
+        return{
+            success:true
+        }
+    }catch (error){
+        console.log(error)
+        console.log('an Error Ocurred on GCloud')
+        return {
+            success:false,
+            message: 'an Error Ocurred'
+        }
+    }
+}
+
 const uploadFiles = async (files,idUser) => {
     const results = await Promise.allSettled(files.map(file => {
         return uploadFile(file,idUser)
@@ -101,4 +118,5 @@ module.exports = {
     uploadFile,
     deleteFile,
     downloadFile,
+    deleteFolderUser
 }

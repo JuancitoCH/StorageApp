@@ -16,7 +16,7 @@ const auth = (app) => {
     })
     router.post('/register', async (req, res) => {
         const response = await authService.register(req.body)
-        return res.json(response)
+        return cookieResponse(res, response)
     })
     router.get('/',isUser,(req,res)=>{
         return res.json({ ...req.userData })

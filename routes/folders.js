@@ -38,6 +38,15 @@ const Folder = (app) =>{
         return res.status(result.success?200:400).json(result)
     })
 
+    router.patch('/rename/:id',isUser,async(req,res)=>{
+        const response = await folderServ.rename({
+            userId:req.userData.id,
+            id:req.params.id,
+            name:req.body.name
+        })
+        return res.json(response)
+    })
+
     router.delete('/delete/:id',isUser, async (req,res)=>{
         const {id}= req.params
         const result = await folderServ.deleteFolderId({

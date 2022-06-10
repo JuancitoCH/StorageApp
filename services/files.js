@@ -1,6 +1,6 @@
 const {uploadFiles,deleteFile, downloadFile} = require('../libs/storage')
 const client = require("../libs/dbClient")
-
+const path = require('path')
 
 class File{
 
@@ -28,6 +28,7 @@ class File{
                     data:{
                         originalName:file.value.originalName,
                         name:file.value.fileName,
+                        size:file.value.size,
                         owner:{
                             connect:{
                                 id:parseInt(idUser)
@@ -88,6 +89,69 @@ class File{
             return result
         }
     }
+
+    async changeFolderFile({userId,id,folderId=null}){
+        try{
+            const responseData = await client.file.updateMany({
+                where:{
+                    ownerId:userId,
+                    id:parseInt(id)
+                },
+                data:{
+                    folderId:parseInt(folderId) || folderId
+                }
+            })
+            return {
+                data:responseData,
+                success: responseData.count===0 ? false : true,
+                ...responseData.count===0 && {message:'File not found'}
+            }
+
+        }catch(error){
+            console.log(error);
+            return {
+                success:false,
+                message:'An Error Ocurred'
+            }
+        }
+
+    }
+
+    async rename({userId,id,name}){
+        try{
+            const file = await client.file.findFirst({
+                where:{
+                    ownerId:userId,
+                    id:parseInt(id)
+                }
+            })
+            if(!file) return {
+                success:false,
+                message:'File not Found'
+            }
+
+            const responseData = await client.file.update({
+                where:{
+                    id:parseInt(id)
+                },
+                data:{
+                    name:name + path.extname(file.originalName)
+                }
+            })
+            return {
+                success:true,
+                data:responseData
+            }
+
+        }catch(error){
+            console.log(error)
+            return{
+                success:false,
+                message:'An Error Ocurred'
+            }
+        }
+    }
+
 }
 
 module.exports = File

@@ -119,7 +119,6 @@ class Folders {
     }
 
     async deleteFolderChildFiles(data) {
-        console.log('a2')
         const childFolders = await this.getById(data)
         if(!childFolders.folders && !childFolders.files) return { success:true }
 
@@ -138,5 +137,41 @@ class Folders {
     async getAllFolders() {
     return await client.folder.findMany()
     }
+
+    async rename({userId,id,name}){
+        try{
+            const folder = await client.folder.findFirst({
+                where:{
+                    ownerId:userId,
+                    id:parseInt(id)
+                }
+            })
+            if(!folder) return {
+                success:false,
+                message:'Folder not Found'
+            }
+
+            const responseData = await client.folder.update({
+                where:{
+                    id:parseInt(id)
+                },
+                data:{
+                    name:name
+                }
+            })
+            return {
+                success:true,
+                data:responseData
+            }
+
+        }catch(error){
+            console.log(error)
+            return{
+                success:false,
+                message:'An Error Ocurred'
+            }
+        }
+    }
+
 }
 module.exports = Folders
