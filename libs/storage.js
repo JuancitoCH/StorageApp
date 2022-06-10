@@ -15,12 +15,12 @@ const storage = new Storage({
 // pipe consume el archivo y lo envia a lo que esta entre parentesis
 // originalFile.pipe(file.createWriteStream())
 
-const uploadFile = (file) => {
+const uploadFile = (file,idUser) => {
     if (!file) return { success: false, message: 'File is required' }
 
     const ext = path.extname(file.originalname)
     const fileName = uuid.v4() + ext
-    const cloudFile = storage.bucket(bucket_name).file(fileName) //ref en la nube
+    const cloudFile = storage.bucket(bucket_name).file(idUser+'/'+fileName) //ref en la nube
     const fileStream = Readable.from(file.buffer)
 
     return new Promise((resolve, reject) => {
@@ -46,7 +46,7 @@ const uploadFile = (file) => {
 }
 
 const downloadFile = async (fileName,res) => {
-    const file = storage.bucket(bucket_name).file(fileName)
+    const file = storage.bucket(bucket_name).file(idUser+'/'+fileName)
     const stream = file.createReadStream()
 
     return new Promise((resolve,reject)=>{
@@ -69,8 +69,8 @@ const downloadFile = async (fileName,res) => {
     })
 }
 
-const deleteFile = async (fileName) => {
-    const file = storage.bucket(bucket_name).file(fileName)
+const deleteFile = async (fileName,idUser) => {
+    const file = storage.bucket(bucket_name).file(idUser+'/'+fileName)
     try {
         await file.delete() //http response
 
@@ -83,14 +83,14 @@ const deleteFile = async (fileName) => {
         console.log(error)
         return {
             success: false,
-            message: 'an Error Ocurred'
+            message: 'an Error Ocurred or File not Found'
         }
     }
 }
 
-const uploadFiles = async (files) => {
+const uploadFiles = async (files,idUser) => {
     const results = await Promise.allSettled(files.map(file => {
-        return uploadFile(file)
+        return uploadFile(file,idUser)
     }))
     // console.log(results)
     return results

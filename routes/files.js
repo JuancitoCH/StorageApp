@@ -1,7 +1,7 @@
 const express = require('express')
 const upload = require('../middleware/uploadFile') //midldware
-const {deleteFile} = require('../libs/storage')
 const FilesService = require('../services/files')
+const {isAmdmin,isUser} = require('../middleware/auth')
 
 function files(app){
     const router = express.Router()
@@ -9,25 +9,25 @@ function files(app){
 
     app.use('/api/files',router)
 
-    router.get('/', async (req,res)=>{
+    router.get('/',isAmdmin, async (req,res)=>{
         const files = await fileServ.getAll()
         return res.json(files)
     })
 
-    router.get("/:fileName",async(req,res)=>{
+    router.get("/:fileName",isUser,async(req,res)=>{
         const result = await fileServ.get(req.params.fileName,res)
         if(result.success) return res.end()
         if(!result.success)return res.status(404).json(result)
     })
 
-    router.post('/upload',upload.array('files'),async(req,res)=>{
+    router.post('/upload',isUser,upload.array('files'),async(req,res)=>{
         // console.log(req.files)
-        const response = await fileServ.uploadMany(req.files,req.body.id)
+        const response = await fileServ.uploadMany(req.files,req.userData,req.body)
         return res.json(response)
     })
-    router.delete('/delete',async(req,res)=>{
+    router.delete('/delete',isUser,async(req,res)=>{
         const {files} = req.body
-        const response = await fileServ.deleteMany(files)
+        const response = await fileServ.deleteMany(files,req.userData)
         return res.json(response)
     })
 }

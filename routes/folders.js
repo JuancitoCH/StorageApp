@@ -1,6 +1,6 @@
 const express = require('express')
 const FoldersService = require('../services/folders')
-const {isUser} = require('../middleware/auth')
+const {isUser, isAmdmin} = require('../middleware/auth')
 
 const Folder = (app) =>{
     const router = express.Router()
@@ -9,6 +9,10 @@ const Folder = (app) =>{
     app.use('/api/folders',router)
 
 
+    router.get('/all',isAmdmin, async (req,res)=>{
+        const result = await folderServ.getAllFolders()
+        return res.json(result)
+    })
     router.get('/myfolders',isUser, async (req,res)=>{
         const result = await folderServ.getMyFolders({
             userId:req.userData.data.id
@@ -30,6 +34,15 @@ const Folder = (app) =>{
             userId:req.userData.data.id,
             name,
             parentFolderId
+        })
+        return res.status(result.success?200:400).json(result)
+    })
+
+    router.delete('/delete/:id',isUser, async (req,res)=>{
+        const {id}= req.params
+        const result = await folderServ.deleteFolderId({
+            userId:req.userData.data.id,
+            id
         })
         return res.status(result.success?200:400).json(result)
     })

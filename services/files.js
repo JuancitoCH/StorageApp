@@ -19,8 +19,9 @@ class File{
         return await downloadFile(fileName,res)
     }
 
-    async uploadMany(files,idUser){
-        const results = await uploadFiles(files)
+    async uploadMany(files,{data:{id:idUser}},{folderId=''}){
+
+        const results = await uploadFiles(files,idUser)
         const uploadedFiles = results.map(async file=>{
             if(file.value.success){
                 const results = await client.file.create({
@@ -31,7 +32,12 @@ class File{
                             connect:{
                                 id:parseInt(idUser)
                             }
-                        }
+                        },
+                        ...(folderId && {folder:{
+                            connect:{
+                                id:parseInt(folderId)
+                            }
+                        }})
                     }
                 })
                 return{
@@ -50,14 +56,14 @@ class File{
     }
 
 
-    async deleteMany(files){
-        const resultPromises = files.map(this.deleteOne)
+    async deleteMany(files,{data:{id:idUser}}){
+        const resultPromises = files.map(file=>this.deleteOne(file,idUser))
         return (await Promise.allSettled(resultPromises)).map(result=>result.value)
     }
 
 
-    async deleteOne(file){
-        const result = await deleteFile(file)
+    async deleteOne(file,idUser){
+        const result = await deleteFile(file,idUser)
         if(result.success){
             try{
                 const deletedFile = await client.file.delete({
