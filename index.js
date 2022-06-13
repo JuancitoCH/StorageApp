@@ -8,6 +8,7 @@ const folders = require('./routes/folders')
 const user = require('./routes/users')
 const auth = require('./routes/auth')
 const subscriptions = require('./routes/subscriptions')
+const webhook = require('./routes/webhook')
 
 
 const app = express()
@@ -15,6 +16,9 @@ const app = express()
 // middelwares
 app.use(cors({
     origin:['http://localhost:4000','http://localhost:3000']
+}))
+app.use("/webhook/stripe",express.raw({
+    type:'application/json'
 }))
 app.use(express.json())
 app.use(cookieParser())
@@ -25,6 +29,7 @@ files(app)
 user(app)
 auth(app)
 subscriptions(app)
+webhook(app)
 
 app.get('/',(req,res)=>{
     return res.json({
