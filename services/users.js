@@ -29,7 +29,7 @@ class user{
                 name:data.name,
                 email:data.email
             })
-            console.log(customer)
+            // console.log(customer)
             const user = await client.user.create({
                 data:{
                     name:data.name,

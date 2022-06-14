@@ -113,10 +113,31 @@ const uploadFiles = async (files,idUser) => {
     return results
 }
 
+const getSizeFolderUser = async (idUser)=>{
+    try{
+        const [folder] = await storage.bucket(bucket_name).getFiles({
+            prefix:idUser+'/'
+        })
+        const sizes = folder.map(file => {
+            // console.log(file.metadata.name);
+            // console.log(file.metadata.size);
+            return Number.parseInt(file.metadata.size)
+          });
+        return sizes
+    }catch(err){
+        console.log(err)
+        return{
+            success:false
+        }
+    }
+    
+}
+
 module.exports = { 
     uploadFiles,
     uploadFile,
     deleteFile,
     downloadFile,
-    deleteFolderUser
+    deleteFolderUser,
+    getSizeFolderUser
 }

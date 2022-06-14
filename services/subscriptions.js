@@ -3,8 +3,17 @@ const client = require("../libs/dbClient")
 const stripe = require('stripe')(stripe_secret_key)
 const endpointSecret = 'whsec_227899105c873f0d15244aa80d62fc537dac3b904c0a07f354c70d72211eda34'
 
+const priceIDS = {
+    PREMIUM:'price_1L9wDoESAjUw9wD999VedTb2',
+    ENTERPRISE:'price_1LAcmYESAjUw9wD9AXfFye8l',
+}
+
+
 class subscription {
-    async createSubscriptions(customerID, priceID) {
+    async createSubscriptions(userId,typePrice) {
+        const customerID = await this.getStripeCustomerId(userId)
+        const priceID = priceIDS[typePrice]
+
         const subscription = await stripe.subscriptions.create({
             customer: customerID,
             items: [
@@ -53,7 +62,9 @@ class subscription {
             },
             'customer.subscription.updated': async ()=> {
                 const subscriptionUpdated = event.data.object
+                console.log(subscriptionUpdated)
                 if (subscriptionUpdated.status === 'active') {
+                    // TODO: al activar suscripcion enviar el type que por defecto esta en premium
                     const sub = await this.activateSubscription(
                         subscriptionUpdated.customer,
                         subscriptionUpdated.id
@@ -69,6 +80,22 @@ class subscription {
         }
     }
 
+    async getStripeCustomerId(userId){
+        const suscriptionData = await client.subscription.findFirst({
+            where:{
+                userId
+            }
+        })
+        return suscriptionData.stripeCustomerId
+    }
+
+    static async getInfoSuscription(idUser){
+        return await client.subscription.findFirst({
+            where:{
+                userId:idUser
+            }
+        })
+    }
 
 }
 

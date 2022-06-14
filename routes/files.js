@@ -48,6 +48,11 @@ function files(app){
         const response = await fileServ.deleteMany(files,req.userData)
         return res.json(response)
     })
+
+    // router.get('/limit/limit',isUser,async(req,res)=>{
+        
+    //     return res.json(await getSizeFolderUser(req.userData.data.id))
+    // })
 }
 
 module.exports=files

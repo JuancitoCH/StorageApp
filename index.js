@@ -15,7 +15,8 @@ const app = express()
 
 // middelwares
 app.use(cors({
-    origin:['http://localhost:4000','http://localhost:3000']
+    origin:['http://localhost:4000','http://localhost:3000'],
+    credentials:true
 }))
 app.use("/webhook/stripe",express.raw({
     type:'application/json'

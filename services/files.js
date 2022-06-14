@@ -1,6 +1,8 @@
-const {uploadFiles,deleteFile, downloadFile} = require('../libs/storage')
+const {uploadFiles,deleteFile, downloadFile, getSizeFolderUser} = require('../libs/storage')
 const client = require("../libs/dbClient")
 const path = require('path')
+const { getInfoSuscription } = require('./subscriptions')
+
 
 class File{
 
@@ -20,6 +22,9 @@ class File{
     }
 
     async uploadMany(files,{data:{id:idUser}},{folderId=''}){
+
+        const canUpload = await this.limitUploadFiles(idUser,files)
+        if(!canUpload.success) return canUpload
 
         const results = await uploadFiles(files,idUser)
         const uploadedFiles = results.map(async file=>{
@@ -152,6 +157,32 @@ class File{
         }
     }
 
+    async limitUploadFiles(idUser,files){
+        const suscription = await getInfoSuscription(idUser)
+        const limit ={
+            // FREE:1e+9,
+            FREE:1000000,
+            PREMIUM:1e+10,
+            ENTERPRISE:1e+11,
+        }
+        const sizes = await getSizeFolderUser(idUser)
+
+        let sizeTotalUser =0
+        let fileSize =0
+
+        files.forEach( file => fileSize+=file.size )
+        sizes.forEach( size => sizeTotalUser+=size )
+
+        if((sizeTotalUser+fileSize)>=limit[suscription.type]) return {
+            success:false,
+            message:'You Reach the size limit'
+        }
+
+        return {
+            success:true
+        }
+
+    }
 }
 
 module.exports = File

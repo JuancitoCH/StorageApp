@@ -1,18 +1,22 @@
 const express = require('express')
+const { isUser } = require('../middleware/auth')
 const Subscription = require('../services/subscriptions')
+
 
 function subscriptions(app){
     const router  =express.Router()
     const subscriptionService = new Subscription()
 
     app.use('/api/subscriptions',router)
-
-    router.post('/create',async(req,res)=>{
-        const {customerID,priceID} = req.body
-        const result = await subscriptionService.createSubscriptions(customerID,priceID)
+    
+    router.post('/create/:price',isUser,async(req,res)=>{
+        const {id} = req.userData
+        const {price} = req.params
+        const result = await subscriptionService.createSubscriptions(id,price)
 
         return res.json({...result})
     })
+
 
 }
 
