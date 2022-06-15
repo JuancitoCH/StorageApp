@@ -77,7 +77,7 @@ class Folders {
                     },
                     ...parentFolderId && {
                         parentFolder: {
-                            connect: { id: parentFolderId }
+                            connect: { id: Number.parseInt(parentFolderId) }
                         }
                     }
                 }
