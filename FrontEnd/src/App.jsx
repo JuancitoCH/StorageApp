@@ -14,6 +14,8 @@ function App() {
           <Route path='/login' element={<Login/>} />
           <Route path='/register' element={<Login/>} />
           <Route path='/folders' element={<MyFolders/>} />
+          <Route path='/folders/:id' element={<MyFolders/>} />
+          <Route path='*' element={<Home/>} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -15,6 +15,8 @@ export default function Home() {
             </section>
             <img src="" alt="" />
             {/* <Payment/> */}
+            
+            <Link to={'/folders'}>Mis Carpetas</Link>
         </div>
     )
 }
