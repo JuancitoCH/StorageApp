@@ -46,7 +46,7 @@ const uploadFile = (file,idUser) => {
     })
 }
 
-const downloadFile = async (fileName,res) => {
+const downloadFile = async (fileName,res,idUser) => {
     const file = storage.bucket(bucket_name).file(idUser+'/'+fileName)
     const stream = file.createReadStream()
 

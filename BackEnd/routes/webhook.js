@@ -11,7 +11,6 @@ function webhook(app) {
     router.post('/stripe', async(req, res) => {
         const sig = req.headers['stripe-signature'];
         const result = await subscriptionService.webhookStripe(sig,req.body)
-        
         return res.status(result.success?200:400).json({})
     })
 }

@@ -6,24 +6,28 @@ import {
     useElements
 } from '@stripe/react-stripe-js'
 
+import { post } from '../api/axios'
+
 const stripe = loadStripe("pk_test_51L9wAjESAjUw9wD9O0ubftrdLAmZedClw1zPZ5xS8zmElVZIDXOmPae1ECpXhIFAgwMoHomszFX6YjVX8ISJxAK5008gAJhbtG")
 
 
 const PaymentForm = (e) => {
-
+    
+    const type = 'ENTERPRISE'
     const stripe = useStripe()
     const elements = useElements()
 
     const paySubscription = async (e)=>{
         e.preventDefault()
-        
+        const {data} = await post('/api/subscriptions/create/'+type)
+        const clientSecret = data.clientSecret
+
         const cardElement = elements.getElement(CardElement)
-        const clietnSecret ="pi_3LA0IFESAjUw9wD91L6yAXzl_secret_fHjEr0LshMeF5Oya36LsqgDvI"
-        const paymentResult = await stripe.confirmCardPayment(clietnSecret,{
+        const paymentResult = await stripe.confirmCardPayment(clientSecret,{
             payment_method:{
                 card:cardElement,
                 billing_details:{
-                    name:"Test",
+                    name:"Juan",
                     email:"cjuancito.chona@gmail.com"
                 }
             }

@@ -1,14 +1,17 @@
 import React from 'react'
+import { useEffect } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
 import { Link,useNavigate } from 'react-router-dom'
 import Input from '../components/Input'
-import {login} from '../features/user/userSlice'
+// import {login} from '../features/user/userSlice'
 
 export default function Login() {
   const Dispatch = useDispatch()
-  // const State = useSelector((state)=>state.user)
+  const {login} = useSelector((state)=>state.user)
   const navigate = useNavigate()
-
+  useEffect(()=>{
+    if(login) navigate('/folders')
+  },[login])
 
   async function loginForm(e){
     e.preventDefault()

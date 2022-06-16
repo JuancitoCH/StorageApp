@@ -15,4 +15,19 @@ const deleteFile = (filename,callback)=>{
         }
     })
 }
-module.exports = deleteFile
+
+const createFile =  (filename,file)=>{
+    return new Promise((resolve,reject)=>{
+        setTimeout(()=>{
+            resolve({
+                success:true,
+                message:"File created successfully"
+            })
+        },5000)
+    })
+}
+
+module.exports = {
+    deleteFile,
+    createFile
+}

@@ -2,6 +2,7 @@ const { stripe_secret_key } = require("../config/env")
 const client = require("../libs/dbClient")
 const stripe = require('stripe')(stripe_secret_key)
 const {deleteFolderUser} = require('../libs/storage')
+const subscription = require("./subscriptions")
 
 class user{
 
@@ -55,6 +56,8 @@ class user{
     }
 
     async delete(id){
+        const subService = new subscription()
+        await subService.cancelSuscription(Number.parseInt(id))
         try{
             const user = await client.user.delete({
                 where:{
@@ -71,7 +74,6 @@ class user{
             }
         }
     }
-
 }
 
 module.exports=user

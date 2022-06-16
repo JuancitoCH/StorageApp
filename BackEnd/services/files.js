@@ -18,7 +18,7 @@ class File{
         })
         if(!file) return {success:false,message:'File Not Found'}
         
-        return await downloadFile(fileName,res)
+        return await downloadFile(fileName,res,file.ownerId)
     }
 
     async uploadMany(files,{data:{id:idUser}},{folderId=''}){
