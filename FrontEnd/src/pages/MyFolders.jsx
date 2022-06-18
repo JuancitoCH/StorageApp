@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { get } from '../api/axios'
+import { get, post } from '../api/axios'
 import Folder from '../components/Folder'
 import File from '../components/File'
 import { useParams, Link } from 'react-router-dom'
@@ -29,11 +29,30 @@ export default function MyFolders() {
       })
   }, [id])
 
+  function uploadFile(e){
+    e.preventDefault()
+    console.log(e.target.files.files)
+    const formData = new FormData()
+
+    for(let file of e.target.files.files){
+      formData.append('files',file)
+    }
+    id&&formData.append('folderId',id)
+    post('/api/files/upload',formData)
+
+
+  }
+
   return (
     <div className='bg-gray-700 text-white p-2'>
       <Link to={'/folders'}>
         <h1>MIS CARPETAS</h1>
       </Link>
+      <form onSubmit={uploadFile} className=''>
+        <p>Upload File</p>
+        <input name='files' type="file" multiple/>
+        <button>send</button>
+      </form>
       {!loading&&<div className='fixed w-full text-center text-5xl text-orange-600 z-50'>Loading...</div>}
       <section className='bg-gray-600 text-white py-2 rounded-lg relative'>
 
