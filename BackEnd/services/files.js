@@ -2,7 +2,12 @@ const {uploadFiles,deleteFile, downloadFile, getSizeFolderUser} = require('../li
 const client = require("../libs/dbClient")
 const path = require('path')
 const { getInfoSuscription } = require('./subscriptions')
-
+const limit ={
+    // FREE:1e+9,
+    FREE:1000000,
+    PREMIUM:1e+10,
+    ENTERPRISE:1e+11,
+}
 
 class File{
 
@@ -140,7 +145,7 @@ class File{
                     id:parseInt(id)
                 },
                 data:{
-                    name:name + path.extname(file.originalName)
+                    originalName:name + path.extname(file.originalName)
                 }
             })
             return {
@@ -159,12 +164,6 @@ class File{
 
     async limitUploadFiles(idUser,files){
         const suscription = await getInfoSuscription(idUser)
-        const limit ={
-            // FREE:1e+9,
-            FREE:1000000,
-            PREMIUM:1e+10,
-            ENTERPRISE:1e+11,
-        }
         const sizes = await getSizeFolderUser(idUser)
 
         let sizeTotalUser =0
@@ -181,7 +180,29 @@ class File{
         return {
             success:true
         }
+    }
 
+    async getUserCurrentSpace(idUser){
+        const suscription = await getInfoSuscription(idUser)
+        const sizes = await getSizeFolderUser(idUser)
+        let sizeTotalUser=0
+
+        console.log(idUser)
+
+        sizes.forEach( size => sizeTotalUser+=size )
+        const planSpace = limit[suscription.type]
+        return {
+            success:true,
+            data:{
+                used:sizeTotalUser,
+                toUse: planSpace-sizeTotalUser,
+                total:planSpace
+            }
+        }
+    }
+
+    async copyFile(){
+        
     }
 }
 

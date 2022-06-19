@@ -15,6 +15,11 @@ const post = async (url,data)=>{
         withCredentials:true
     })
 }
+const patch = async (url,data)=>{
+    return await axiosInstance.patch(url,data,{
+        withCredentials:true
+    })
+}
 const deleteA = async (url,data)=>{
     return await axiosInstance.delete(url,data,{
         withCredentials:true
@@ -24,5 +29,6 @@ const deleteA = async (url,data)=>{
 export {
     get,
     post,
-    deleteA
+    deleteA,
+    patch
 }

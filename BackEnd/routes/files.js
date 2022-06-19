@@ -6,9 +6,13 @@ const {isAmdmin,isUser} = require('../middleware/auth')
 function files(app){
     const router = express.Router()
     const fileServ = new FilesService()
-
+    
     app.use('/api/files',router)
-
+    
+    router.get('/user/space',isUser,async(req,res)=>{
+        const response = await fileServ.getUserCurrentSpace(req.userData.data.id)
+        return res.json(response)
+    })
     router.get('/',isAmdmin, async (req,res)=>{
         const files = await fileServ.getAll()
         return res.json(files)
@@ -28,7 +32,7 @@ function files(app){
 
     router.patch('/move/:id',isUser,async(req,res)=>{
         const response = await fileServ.changeFolderFile({
-            userId:req.userData.id,
+            userId:req.userData.data.id,
             folderId:req.body.folderId,
             id:req.params.id
         })
@@ -36,14 +40,14 @@ function files(app){
     })
     router.patch('/rename/:id',isUser,async(req,res)=>{
         const response = await fileServ.rename({
-            userId:req.userData.id,
+            userId:req.userData.data.id,
             id:req.params.id,
             name:req.body.name
         })
         return res.json(response)
     })
 
-    router.delete('/delete',isUser,async(req,res)=>{
+    router.post('/delete',isUser,async(req,res)=>{
         const {files} = req.body
         const response = await fileServ.deleteMany(files,req.userData)
         return res.json(response)

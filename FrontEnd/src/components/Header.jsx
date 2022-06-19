@@ -24,8 +24,6 @@ export default function Header() {
       navigate('/')
     })
   }
-
-  console.log(login)
   return (
     <header className='relative bg-slate-800 flex text-white p-2 items-center'>
       {/* <LeftSlider state={menu} /> */}

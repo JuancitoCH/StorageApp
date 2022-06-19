@@ -40,7 +40,7 @@ const Folder = (app) =>{
 
     router.patch('/rename/:id',isUser,async(req,res)=>{
         const response = await folderServ.rename({
-            userId:req.userData.id,
+            userId:req.userData.data.id,
             id:req.params.id,
             name:req.body.name
         })

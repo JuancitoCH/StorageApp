@@ -173,5 +173,9 @@ class Folders {
         }
     }
 
+    async copyFolder(){
+        
+    }
+
 }
 module.exports = Folders
