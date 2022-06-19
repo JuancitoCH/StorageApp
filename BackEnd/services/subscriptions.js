@@ -1,7 +1,11 @@
+const { config } = require("dotenv")
 const { stripe_secret_key } = require("../config/env")
 const client = require("../libs/dbClient")
 const stripe = require('stripe')(stripe_secret_key)
-const endpointSecret = 'whsec_227899105c873f0d15244aa80d62fc537dac3b904c0a07f354c70d72211eda34'
+
+const endpointSecret = config.webhook_stripe || 'whsec_227899105c873f0d15244aa80d62fc537dac3b904c0a07f354c70d72211eda34'
+
+
 
 const priceIDS = {
     'price_1L9wDoESAjUw9wD999VedTb2': 'PREMIUM',
