@@ -1,4 +1,4 @@
-const { config } = require("dotenv")
+const config = require("../config/env")
 const { stripe_secret_key } = require("../config/env")
 const client = require("../libs/dbClient")
 const stripe = require('stripe')(stripe_secret_key)

@@ -9,7 +9,7 @@ const config = {
     stripe_secret_key:process.env.STRIPE_SK,
     paypal_client_sk:process.env.PAYPAL_CSK,
     paypal_client_id:process.env.PAYPAL_CID,
-    webhook_stripe: process.env.MODE_DEV && process.env.WEBHOOK_STRIPE,
+    webhook_stripe: !process.env.MODE_DEV && process.env.WEBHOOK_STRIPE,
 }
 
 module.exports= config
