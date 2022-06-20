@@ -1,0 +1,18 @@
+.menuAnimate{
+    animation: open 300ms ease-in forwards;
+}
+
+@keyframes open{
+    0%{
+        left: 4.7rem;
+        top: 1rem;
+        opacity: 0;
+    }
+    
+    100%{
+        opacity: 1;
+        left: 4.8rem;
+        top: 1.5rem;
+
+    }
+}
