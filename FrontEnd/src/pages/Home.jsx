@@ -45,7 +45,7 @@ export default function Home() {
                     </ul>
                     <h3 className='font-normal text-4xl'>Cost</h3>
                     <h3 className='font-normal text-4xl'>$8.00</h3>
-                    <Link to={'/login'}>
+                    <Link to={'/suscription/premium'}>
                         <button className='mt-4 border-2 hover:text-pink-500 border-slate-700 rounded-md py-2 px-4 font-semibold hover:border-pink-500 ease-in'>Login</button>
                     </Link>
                 </article>
@@ -60,7 +60,7 @@ export default function Home() {
                     </ul>
                     <h3 className='font-normal text-4xl'>Cost</h3>
                     <h3 className='font-normal text-4xl'>$16.00</h3>
-                    <Link to={'/login'}>
+                    <Link to={'/suscription/enterprise'}>
                         <button className='mt-4 border-2 hover:text-pink-500 border-slate-700 rounded-md py-2 px-4 font-semibold hover:border-pink-500 ease-in'>Login</button>
                     </Link>
                 </article>

@@ -62,17 +62,17 @@ export default function MyFolders() {
   }
 
   return (
-    <div className='bg-gray-700 text-white p-2'>
+    <div className='bg-gray-700 min-h-screen text-white p-2'>
       <Link to={'/folders'}>
-        <h1>MIS CARPETAS</h1>
+        <h1 className='hover:text-pink-500 text-xl inline-block bg-slate-400 rounded-md py-1 px-1 font-semibold ease-in'>Root</h1>
       </Link>
 
-      <form onSubmit={newFolder}>
-        <input className='text-slate-700'  type="text" name='name'/>
-        <button>+Folder+</button>
+      <form className='bg-gray-600 ml-2  right-3 top-16 z-10 w-fit p-2 rounded-t-md' onSubmit={newFolder}>
+        <input className='text-slate-700 rounded-lg'  type="text" name='name'/>
+        <button className='border-2 hover:text-pink-500 border-slate-700 rounded-md py-1 px-1 font-semibold hover:border-pink-500 ease-in'>+Folder+</button>
       </form>
 
-      <form className='bg-gray-600 ml-2 absolute right-3 z-10 w-fit p-2 rounded-t-md' onSubmit={uploadFile} >
+      <form className='bg-gray-600 ml-2 absolute right-3 top-20 z-10 w-fit p-2 rounded-t-md' onSubmit={uploadFile} >
         <input ref={reference} className='input-file' name='files' type="file" multiple/>
         <label className='text-2xl font-bold hover:text-pink-500 cursor-pointer' onClick={labelOnClick} htmlFor="files">+</label>
         <button className='border-2 hover:text-pink-500 border-slate-700 rounded-md py-1 px-1 font-semibold hover:border-pink-500 ease-in'>UPLOAD</button>
@@ -80,7 +80,7 @@ export default function MyFolders() {
 
 
       {!loading&&<div className='fixed w-full text-center text-5xl text-orange-600 z-50'>Loading...</div>}
-      <section className='bg-gray-600 text-white py-2 rounded-lg relative'>
+      <section className='bg-gray-600 min-h-[calc(25rem)] text-white py-2 rounded-lg relative'>
 
         {myFolders.map((data, i) => <Folder key={i} data={data} />)}
         {myFiles.map((data, i) => <File key={i} data={data} />)}
