@@ -51,12 +51,26 @@ export default function MyFolders() {
     reference.current.click()
   }
 
+  const newFolder=(e)=>{
+    e.preventDefault()
+    if(!e.target.name.value) return ''
+    post('/api/folders/',{
+      name:e.target.name.value,
+      parentFolderId:id
+    })
+    .then(data=>setUploadReload(!uploadReload))
+  }
+
   return (
     <div className='bg-gray-700 text-white p-2'>
       <Link to={'/folders'}>
         <h1>MIS CARPETAS</h1>
       </Link>
 
+      <form onSubmit={newFolder}>
+        <input className='text-slate-700'  type="text" name='name'/>
+        <button>+Folder+</button>
+      </form>
 
       <form className='bg-gray-600 ml-2 absolute right-3 z-10 w-fit p-2 rounded-t-md' onSubmit={uploadFile} >
         <input ref={reference} className='input-file' name='files' type="file" multiple/>

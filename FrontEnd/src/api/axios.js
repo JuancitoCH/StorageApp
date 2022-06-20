@@ -3,11 +3,12 @@ import axios from 'axios'
 
 const axiosInstance = axios.create({
     baseURL:'http://localhost:4000'
+    // baseURL:'http://34.95.195.247'
 })
 
 const get = async (url)=>{
     return await axiosInstance.get(url,{
-        withCredentials:true
+        withCredentials:true, 
     })
 }
 const post = async (url,data)=>{
